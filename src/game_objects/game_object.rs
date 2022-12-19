@@ -9,7 +9,7 @@ use {
 pub trait GameObject {
     fn id(&self) -> &'static str;
     fn is_active(&self) -> bool;
-    fn update(&mut self, ctx: &mut Context, dt: f32, others: View);
+    fn update(&mut self, ctx: &mut Context, dt: f32, others: View) -> Vec<Box<dyn GameObject>>;
     fn draw(&mut self, ctx: &mut Context, canvas: &mut Canvas, batch: &mut InstanceArray);
     fn as_any(&mut self) -> &mut dyn Any;
 }
