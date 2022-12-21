@@ -42,7 +42,8 @@ impl EventHandler<Action> for Game {
 
         for i in 0..self.game_objects.len() {
             let (this, others) = create_view(&mut self.game_objects, i);
-            addons.extend(this.update(ctx, dt, others));
+
+            this.update(others, &mut addons, ctx, dt);
         }
 
         self.game_objects.retain(|obj| obj.is_active());
@@ -54,9 +55,11 @@ impl EventHandler<Action> for Game {
     fn draw(&mut self, ctx: &mut Context) -> Result<(), Action> {
         let mut canvas = Canvas::from_frame(&ctx.gfx, Color::WHITE);
 
-        for obj in self.game_objects.iter_mut() {
-            if let Some(batch) = self.batches.get_mut(obj.id()) {
-                obj.draw(ctx, &mut canvas, batch);
+        for i in 0..self.game_objects.len() {
+            let (this, others) = create_view(&mut self.game_objects, i);
+
+            if let Some(batch) = self.batches.get_mut(this.id()) {
+                this.draw(others, batch, ctx, &mut canvas);
             }
         }
 
